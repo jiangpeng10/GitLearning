@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="springboot.mapper.UserinfoMapper">
+
+	<sql id="userinfoBaseColumnSql">
+		uid,
+		uname,
+		upass,
+		ustatus,
+		weixinhao,
+		createTime,
+		updateTime
+	</sql>
+
+	<sql id="userinfoBaseWhereSql">
+		<if test="map!=null">
+			<where>
+				<if test="map.uid!=null">
+					uid = #{map.uid}
+				</if>
+				<if test="map.uname!=null">
+					AND uname = #{map.uname}
+				</if>
+				<if test="map.upass!=null">
+					AND upass = #{map.upass}
+				</if>
+				<if test="map.ustatus!=null">
+					AND ustatus = #{map.ustatus}
+				</if>
+				<if test="map.weixinhao!=null">
+					AND weixinhao = #{map.weixinhao}
+				</if>
+				<if test="map.createTime!=null">
+					AND createTime = #{map.createTime}
+				</if>
+				<if test="map.updateTime!=null">
+					AND updateTime = #{map.updateTime}
+				</if>
+			</where>
+		</if>
+	</sql>
+
+	<insert id="insertUserinfo" parameterType="springboot.entity.Userinfo">
+		INSERT INTO userinfo(
+		<include refid="userinfoBaseColumnSql" />
+		)VALUES(
+		#{uid},
+		#{uname},
+		#{upass},
+		#{ustatus},
+		#{weixinhao},
+		#{createTime},
+		#{updateTime}
+		)
+	</insert>
+
+	<insert id="insertUserAndRole">
+		INSERT INTO `urinfo` VALUES(#{uid},#{rid})
+	</insert>
+
+	<delete id="deleteUserAndRole">
+		DELETE FROM `urinfo` WHERE uid = #{uid} AND rid = #{rid}
+	</delete>
+
+	<delete id="deleteUserinfoByUid" parameterType="Integer">
+		DELETE FROM
+		userinfo WHERE uid = #{uid}
+	</delete>
+
+	<update id="updateUserinfo" parameterType="springboot.entity.Userinfo">
+		UPDATE userinfo
+		<set>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(uname)">
+				uname = #{uname} ,
+			</if>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(upass)">
+				upass = #{upass} ,
+			</if>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(ustatus)">
+				ustatus = #{ustatus} ,
+			</if>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(weixinhao)">
+				weixinhao = #{weixinhao} ,
+			</if>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(createTime)">
+				createTime = #{createTime} ,
+			</if>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(updateTime)">
+				updateTime = #{updateTime} ,
+			</if>
+		</set>
+		WHERE uid = #{uid}
+	</update>
+
+	<select id="searchUserinfoByParams" parameterType="map"
+		resultMap="userinfoMap">
+		SELECT
+		<include refid="userinfoBaseColumnSql" />
+		FROM userinfo
+		<include refid="userinfoBaseWhereSql" />
+	</select>
+	
+	<select id="searchUserinfoByUname" resultMap="userinfoMap">
+		SELECT 
+		<include refid="userinfoBaseColumnSql" />
+		FROM userinfo WHERE uname LIKE concat(concat('%',#{uname}),'%')
+	</select>
+	
+	<select id="searchUserAuth" resultType="java.util.Map">
+		SELECT
+		resources.`resurl`,roleresource.`authority`
+		FROM
+		roleresource JOIN
+		resources ON
+		roleresource.`resourceid`=resources.`rid`
+		WHERE roleid IN
+		(SELECT rid
+		FROM urinfo WHERE uid=#{uid}) order by resources.`resurl`
+	</select>
+
+	<select id="searchUserAndRoleByParams" parameterType="map"
+		resultMap="userinfoMap">
+		SELECT * FROM `userinfo` u
+		<where>
+			<if test="map!=null">
+				<if test="map.uname!=null">
+					uname like concat(concat('%',#{map.uname}),'%')
+				</if>
+				<if test="map.ustatus!=null">
+					ustatus=#{status}
+				</if>
+			</if>
+		</where>
+	</select>
+
+	<select id="searchrolebyuid" resultType="springboot.entity.Roleinfo">
+		SELECT * FROM roleinfo r
+		JOIN `urinfo` ur ON ur.`rid`=r.`rid`
+		WHERE ur.`uid`=#{uid}
+	</select>
+
+	<resultMap type="springboot.entity.Userinfo" id="userinfoMap">
+		<id column="uid" property="uid" />
+		<result column="uname" property="uname" />
+		<result column="upass" property="upass" />
+		<result column="ustatus" property="ustatus" />
+		<result column="weixinhao" property="weixinhao" />
+		<result column="createTime" property="createTime" />
+		<result column="updateTime" property="updateTime" />
+		<collection property="rolelist" column="uid" select="searchrolebyuid">
+		</collection>
+	</resultMap>
+
+</mapper>

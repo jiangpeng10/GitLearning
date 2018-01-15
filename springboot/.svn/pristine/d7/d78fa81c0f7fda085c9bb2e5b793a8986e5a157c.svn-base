@@ -1,0 +1,37 @@
+package test;
+
+import java.util.List;
+
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import springboot.Hello;
+import springboot.entity.Userinfo;
+import springboot.service.UserinfoService;
+
+@RunWith(SpringJUnit4ClassRunner.class) // SpringJUnit支持，由此引入Spring-Test框架支持！ 
+@SpringApplicationConfiguration(classes = Hello.class) // 指定我们SpringBoot工程的Application启动类
+@WebAppConfiguration
+public class Test {
+	@Autowired
+	private UserinfoService userinfoServiceImpl;
+	
+	@org.junit.Test
+	public void start(){
+		Userinfo user = new Userinfo();
+		user.setUname("ljp");
+		user.setUpass("123456");
+		user = userinfoServiceImpl.userLogin(user);
+		System.out.println(user);
+	}
+	
+	@org.junit.Test
+	public void findAll(){
+		List<Userinfo> list = userinfoServiceImpl.findAll();
+		System.out.println(list.size());
+	}
+	
+}

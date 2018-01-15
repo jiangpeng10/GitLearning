@@ -1,0 +1,13 @@
+package springboot.service;
+
+import java.util.List;
+
+import com.fc.platform.commons.page.Page;
+
+import springboot.entity.Userinfo;
+
+public interface UserinfoService {
+	public Userinfo userLogin(Userinfo user);
+	public List<Userinfo> findAll();
+	public Page<Userinfo> findAll(int page,int limit);
+}

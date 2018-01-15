@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ljp.dao.UserinfoDao">
+    <insert id="insertUserinfo" parameterType="com.ljp.domain.Userinfo" keyProperty="userId" useGeneratedKeys="true">
+        INSERT INTO userinfo(userName,userSex,phone)VALUES
+        (#{userName},#{userSex},#{phone})
+    </insert>
+    <select id="searchUserinfo" resultType="com.ljp.domain.Userinfo">
+        SELECT userId,userName,userSex,phone FROM userinfo WHERE userId=#{userId}
+    </select>
+</mapper>

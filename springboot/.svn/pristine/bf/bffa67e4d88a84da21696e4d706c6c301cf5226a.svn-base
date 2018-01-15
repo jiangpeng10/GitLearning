@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="springboot.mapper.ResourceMapper">
+
+    <sql id="resourceBaseColumnSql">
+        rid,
+        rname,
+        resurl,
+        resorderno,
+        redsdes,
+        createTime,
+        updatetime,
+        createMan,
+        updateMan,
+        parentID
+    </sql>
+
+    <sql id="resourceBaseWhereSql">
+        <if test="map!=null">
+            <where>
+                <if test="map.rid!=0">
+                    rid = #{map.rid}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.rname)">
+                    AND rname = #{map.rname}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.resurl)">
+                    AND resurl = #{map.resurl}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.resorderno)">
+                    AND resorderno = #{map.resorderno}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.redsdes)">
+                    AND redsdes = #{map.redsdes}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.createTime)">
+                    AND createTime = #{map.createTime}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.updatetime)">
+                    AND updatetime = #{map.updatetime}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.createMan)">
+                    AND createMan = #{map.createMan}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.updateMan)">
+                    AND updateMan = #{map.updateMan}
+                </if>
+                <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.parentId)">
+                    AND parentID = #{map.parentId}
+                </if>
+            </where>
+        </if>
+    </sql>
+
+    <insert id="insertResource" parameterType="springboot.entity.Resource">
+        INSERT INTO resources(
+        <include refid="resourceBaseColumnSql"/>
+        )VALUES(
+            #{rid},
+            #{rname},
+            #{resurl},
+            #{resorderno},
+            #{redsdes},
+            #{createTime},
+            #{updatetime},
+            #{createMan},
+            #{updateMan},
+            #{parentId}
+        )
+    </insert>
+
+    
+    <delete id="deleteResourceByRid" parameterType="Integer">
+        DELETE FROM resources WHERE rid = #{rid}
+    </delete>
+
+    <update id="updateResource" parameterType="springboot.entity.Resource">
+        UPDATE resources
+        <set>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(rname)">
+                rname = #{rname} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(resurl)">
+                resurl = #{resurl} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(resorderno)">
+                resorderno = #{resorderno} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(redsdes)">
+                redsdes = #{redsdes} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(createTime)">
+                createTime = #{createTime} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(updatetime)">
+                updatetime = #{updatetime} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(createMan)">
+                createMan = #{createMan} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(updateMan)">
+                updateMan = #{updateMan} ,
+            </if>
+            <if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(parentId)">
+                parentID = #{parentId} ,
+            </if>
+        </set>
+        WHERE rid = #{rid}
+    </update>
+
+    <select id="searchResourceByParams" parameterType="map" resultMap="resourceMap">
+        SELECT
+        <include refid="resourceBaseColumnSql"/>
+        FROM resources
+        <include refid="resourceBaseWhereSql"/>
+    </select>
+
+    <resultMap type="springboot.entity.Resource" id="resourceMap">
+        <id column="rid" property="rid"/>
+        <result column="rname" property="rname"/>
+        <result column="resurl" property="resurl"/>
+        <result column="resorderno" property="resorderno"/>
+        <result column="redsdes" property="redsdes"/>
+        <result column="createTime" property="createTime"/>
+        <result column="updatetime" property="updatetime"/>
+        <result column="createMan" property="createMan"/>
+        <result column="updateMan" property="updateMan"/>
+        <result column="parentID" property="parentId"/>
+    </resultMap>
+
+</mapper>

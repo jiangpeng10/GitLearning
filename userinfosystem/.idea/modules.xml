@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/userinfosystem.iml" filepath="$PROJECT_DIR$/userinfosystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userinfosystemdao/userinfosystemdao.iml" filepath="$PROJECT_DIR$/userinfosystemdao/userinfosystemdao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userinfosystemdomain/userinfosystemdomain.iml" filepath="$PROJECT_DIR$/userinfosystemdomain/userinfosystemdomain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userinfosystemservice/userinfosystemservice.iml" filepath="$PROJECT_DIR$/userinfosystemservice/userinfosystemservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userinfosystemweb/userinfosystemweb.iml" filepath="$PROJECT_DIR$/userinfosystemweb/userinfosystemweb.iml" />
+    </modules>
+  </component>
+</project>

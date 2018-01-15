@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="springboot.mapper.RoleinfoMapper">
+
+	<sql id="roleinfoBaseColumnSql">
+		rid,
+		rname
+	</sql>
+
+	<sql id="roleinfoBaseWhereSql">
+		<if test="map!=null">
+			<where>
+				<if test="map.rid!=0">
+					rid = #{map.rid}
+				</if>
+				<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(map.rname)">
+					AND rname = #{map.rname}
+				</if>
+			</where>
+		</if>
+	</sql>
+
+	<insert id="insertRoleinfo" parameterType="springboot.entity.Roleinfo">
+		INSERT INTO roleinfo(
+		<include refid="roleinfoBaseColumnSql" />
+		)VALUES(
+		#{rid},
+		#{rname}
+		)
+	</insert>
+
+	<insert id="insertroleresource">
+		INSERT INTO roleresource(`roleid`,`resourceid`)
+		VALUE(#{roleid},#{resourceid})
+	</insert>
+
+	<delete id="deleteroleresource">
+		DELETE FROM roleresource WHERE roleid=#{roleid} AND
+		resourceid=#{resourceid}
+	</delete>
+
+	<delete id="deleteRoleinfoByRid" parameterType="Integer">
+		DELETE FROM
+		roleinfo WHERE rid = #{rid}
+	</delete>
+
+	<update id="updateRoleinfo" parameterType="springboot.entity.Roleinfo">
+		UPDATE roleinfo
+		<set>
+			<if test="@org.apache.commons.lang3.StringUtils@isNotEmpty(rname)">
+				rname = #{rname} ,
+			</if>
+		</set>
+		WHERE rid = #{rid}
+	</update>
+
+	<select id="searchRoleinfoByParams" parameterType="map"
+		resultMap="roleinfoMap">
+		SELECT
+		<include refid="roleinfoBaseColumnSql" />
+		FROM roleinfo
+		<include refid="roleinfoBaseWhereSql" />
+	</select>
+
+	<select id="searchRoleAndResourceByParams"
+		resultType="java.lang.Integer">
+		SELECT COUNT(0) FROM `roleresource` WHERE `roleid` = #{roleid} AND
+		`resourceid` = #{resourceid}
+	</select>
+
+	<select id="searchCountRoleResource" resultType="java.lang.Integer">
+		SELECT COUNT(0)
+		FROM `roleresource` WHERE roleid = #{roleid}
+		AND resourceid IN
+		(SELECT
+		rid FROM `resources` WHERE parentID =
+		(SELECT parentID FROM `resources`
+		WHERE rid = #{resourceid})
+		)
+	</select>
+
+	<resultMap type="springboot.entity.Roleinfo" id="roleinfoMap">
+		<id column="rid" property="rid" />
+		<result column="rname" property="rname" />
+	</resultMap>
+
+</mapper>

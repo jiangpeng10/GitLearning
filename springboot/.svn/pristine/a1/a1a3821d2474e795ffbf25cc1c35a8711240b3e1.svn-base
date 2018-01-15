@@ -1,0 +1,51 @@
+package springboot.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.fc.platform.commons.page.Page;
+import com.fc.platform.commons.page.PageRequest;
+import com.fc.platform.commons.page.Pageable;
+
+import springboot.entity.Userinfo;
+import springboot.mapper.UserinfoMapper;
+import springboot.service.UserinfoService;
+
+@Service
+@Transactional
+public class UserinfoServiceImpl implements UserinfoService{
+
+	@Autowired
+	private UserinfoMapper userinfoMapper;
+	
+	@Override
+	public Userinfo userLogin(Userinfo user) {
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("uname", user.getUname());
+		map.put("upass", user.getUpass());
+		List<Userinfo> list = userinfoMapper.searchUserinfoByParams(map);
+		if(list.size()==0){
+			return null;
+		}else{
+			return list.get(0);
+		}
+	}
+
+	@Override
+	public List<Userinfo> findAll() {
+		
+		return userinfoMapper.searchUserinfoByParams(null);
+	}
+
+	@Override
+	public Page<Userinfo> findAll(int page, int limit) {
+		PageRequest pageable = new PageRequest(page,limit);
+		return userinfoMapper.searchUserinfoByParams(null, pageable);
+	}
+	
+}
